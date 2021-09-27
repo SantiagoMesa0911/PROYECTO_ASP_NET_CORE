@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
+using PROYECT_SANTIAGO_MESA.Core.ViewModels;
 
 namespace PROYECT_SANTIAGO_MESA.Data.Reports
 {

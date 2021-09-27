@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using PROYECT_SANTIAGO_MESA.Core.Entity;
 using PROYECT_SANTIAGO_MESA.Core.Interfaces;
 using PROYECT_SANTIAGO_MESA.Data.Reports;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntitiyFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PROYECT_SANTIAGO_MESA.Core;
+using PROYECT_SANTIAGO_MESA.Core.ViewModels;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace PROYECT_SANTIAGO_MESA.Controllers
 {
@@ -180,3 +181,4 @@ namespace PROYECT_SANTIAGO_MESA.Controllers
             return Json(customerRepository.All());
         }
     }
+}

@@ -1,4 +1,5 @@
-﻿using PROYECT_SANTIAGO_MESA.Core.Entity;
+﻿using PROYECT_SANTIAGO_MESA.Core;
+using PROYECT_SANTIAGO_MESA.Core.Entity;
 using PROYECT_SANTIAGO_MESA.Core.Interfaces;
 using PROYECT_SANTIAGO_MESA.Data.AppDataContext;
 using PROYECT_SANTIAGO_MESA.Data.Repository.Base;
@@ -7,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InvoiceOne.Data.Repository
+namespace PROYECT_SANTIAGO_MESA.Data.Repository
 {
     public class SaleRepository : BaseRepository<SalesModel>, ISaleRepository
     {

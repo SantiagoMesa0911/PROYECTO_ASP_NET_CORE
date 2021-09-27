@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InvoiceOne.Data.Repository
+namespace PROYECT_SANTIAGO_MESA.Data.Repository
 {
     public class SaleItemRepository : BaseRepository<SalesItemsModel>, ISaleItemRepository
     {

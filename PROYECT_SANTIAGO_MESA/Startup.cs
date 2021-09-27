@@ -8,50 +8,103 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using PROYECT_SANTIAGO_MESA.Core.Interfaces;
+using PROYECT_SANTIAGO_MESA.Data.AppDataContext;
+using PROYECT_SANTIAGO_MESA.Data.Repository;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PROYECT_SANTIAGO_MESA.Core;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace PROYECT_SANTIAGO_MESA
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
+        public class Startup
         {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllersWithViews();
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
+            public Startup(IConfiguration configuration)
             {
-                app.UseDeveloperExceptionPage();
+                Configuration = configuration;
             }
-            else
+
+            public IConfiguration Configuration { get; }
+
+            // This method gets called by the runtime. Use this method to add services to the container.
+            public void ConfigureServices(IServiceCollection services)
             {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                           .AddCookie(options =>
+                           {
+                               options.LoginPath = "/Home/login/";
+                           });
+
+                services.AddSingleton<IFileProvider>(
+                    new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images")));
+
+                services.AddSingleton<IConfiguration>(Configuration);
+
+                //services.AddMvc();
+                services.AddMvc().AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+
+                services.AddMvcCore(options =>
+                {
+                    options.RequireHttpsPermanent = true; // does not affect api requests
+                    options.RespectBrowserAcceptHeader = true; // false by default
+
+                })
+            //.AddApiExplorer()
+            //.AddAuthorization()
+            .AddFormatterMappings()
+            //.AddCacheTagHelper()
+            //.AddDataAnnotations()
+            //.AddCors()
+            .AddJsonFormatters(); // JSON, or you can build your own custom one (above)
+
+                services.AddDbContext<InvoiceDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+
+                //var host = Configuration["host"];
+
+                services.AddTransient<IProductRepository, ProductRepository>();
+                services.AddTransient<ICustomerRepository, CustomerRepository>();
+                services.AddTransient<ISaleRepository, SaleRepository>();
+                services.AddTransient<ISaleItemRepository, SaleItemRepository>();
+                services.AddTransient<IStoreSettingRepository, StoreSettingRepository>();
+                services.AddTransient<IUserRepository, UserRepository>();
             }
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
 
-            app.UseRouting();
 
-            app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+
+            // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            public void Configure(IApplicationBuilder app, IHostingEnvironment env)
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+                app.UseAuthentication();
+                if (env.IsDevelopment())
+                {
+                    app.UseDeveloperExceptionPage();
+                }
+                else
+                {
+                    app.UseExceptionHandler("/Home/Error");
+                }
+
+                app.UseStaticFiles();
+
+                app.UseMvc(routes =>
+                {
+                    routes.MapRoute(
+                        name: "default",
+                        template: "{controller=Home}/{action=Index}/{id?}");
+                });
+            }
         }
+
     }
-}
+
+
+
+

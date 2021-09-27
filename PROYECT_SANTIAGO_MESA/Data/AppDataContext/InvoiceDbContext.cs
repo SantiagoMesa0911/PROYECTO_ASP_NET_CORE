@@ -1,15 +1,14 @@
 ﻿
+using PROYECT_SANTIAGO_MESA.Core.Entity;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 
 namespace PROYECT_SANTIAGO_MESA.Data.AppDataContext
 {
-    using PROYECT_SANTIAGO_MESA.Core;
-    using PROYECT_SANTIAGO_MESA.Core.Entity;
-    using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-
     public class InvoiceDbContext : DbContext
     {
         public InvoiceDbContext(DbContextOptions options) : base(options)
